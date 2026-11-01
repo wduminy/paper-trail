@@ -1,6 +1,7 @@
 use std::path::PathBuf;
 
 use clap::{Parser, Subcommand};
+use pt_core::*;
 
 #[derive(Parser)]
 #[command(version, about)]
@@ -18,16 +19,14 @@ enum Command {
     },
 }
 
-fn main() {
+fn main() -> CoreResult {
     let cli = Cli::parse();
-
+    let mut svs = ProjectService::default();
     match cli.command {
-        Command::Extract { file } => match pt_core::extract(&file) {
-            Ok(text) => println!("{text}"),
-            Err(err) => {
-                eprintln!("error: failed to extract {}: {err}", file.display());
-                std::process::exit(1);
-            }
-        },
-    }
+        Command::Extract { file } => {
+            svs.add_pdf(&file)?;
+            svs.save("./demo_project/project.json")?;
+        }
+    };
+    Ok(())
 }

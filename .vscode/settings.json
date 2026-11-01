@@ -1,0 +1,15 @@
+{
+    "chat.agent.enabled": false,
+    "chat.agent.sandbox.enabled": "off",
+    "chat.agent.sandbox.network.allowNetwork": false,
+    "chat.agent.sandbox.allowUnsandboxedCommands": false,
+    "chat.agent.sandbox.mcpServers": false,
+    "chat.agent.sandbox.lspServers": false,
+    "chat.agent.sandbox.credentials.authenticategit": false,
+    "chat.agent.sandbox.credentials.authenticategh": false,
+    "chat.agent.sandbox.fileSystem.allowDevToolAccess": false,
+    "chat.agent.codeBlockProgress": false,
+    "chat.agent.thinking.generateTitles": false,
+    "chat.agent.thinking.terminalTools": false,
+    "chat.checkpoints.showFileChanges": true
+}
