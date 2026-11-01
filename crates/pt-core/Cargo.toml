@@ -1,0 +1,11 @@
+[package]
+name = "pt-core"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+
+[dependencies]
+pdf-extract.workspace = true
+thiserror.workspace = true
+[dev-dependencies]
+rstest.workspace = true
