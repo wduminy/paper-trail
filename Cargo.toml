@@ -1,18 +1,19 @@
 [workspace]
 resolver = "2"
 members = [
-    "crates/pt-core",
-    "crates/pt-cli",
+    "crates/pt_core",
+    "crates/pt_cli", "crates/pt_ui",
 ]
+default-members = [ "crates/pt_ui" ]
 
 
 [workspace.package]
 version = "0.1.0"
 edition = "2021"
-authors = ["Willem Duminy <willem@bulksms.com>"]
+authors = ["Willem Duminy"]
 
 [workspace.dependencies]
-pt-core = { path = "crates/pt-core" }
+pt_core = { path = "crates/pt_core" }
 
 clap = {version = "^4.6.7",features = ["derive"]}
 pdf-extract = "^0.12.1"

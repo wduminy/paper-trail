@@ -1,12 +1,12 @@
 [package]
-name = "pt-cli"
+name = "pt_cli"
 version.workspace = true
 edition.workspace = true
 authors.workspace = true
 
 [dependencies]
 clap.workspace = true
-pt-core.workspace = true
+pt_core.workspace = true
 
 [dev-dependencies]
 rstest.workspace = true
