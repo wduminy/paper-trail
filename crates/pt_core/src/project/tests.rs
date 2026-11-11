@@ -3,11 +3,6 @@ use super::*;
 use googletest::prelude::*;
 use rstest::*;
 
-macro_rules! err_has {
-    ($text:expr) => {
-        err(displays_as(contains_substring($text)))
-    };
-}
 mod project {
     use super::*;
 
@@ -16,8 +11,9 @@ mod project {
         #[rstest]
         fn duplicate_file_not_allowed(mock_f: MockService) {
             let mut p = Project::default();
-            assert_ok!(p.add_document("hello.pdf", &mock_f));
-            assert_that!(p.add_document("hello.pdf", &mock_f), err_has!("duplicate"));
+            let mut add = || p.add_document("something.pdf", &mock_f);
+            assert_ok!(add());
+            assert_that!(add(), err(contains_substring("duplicate")));
         }
     }
 }

@@ -1,12 +1,7 @@
-#[derive(Debug, thiserror::Error)]
-pub enum CoreError {
-    #[error(transparent)]
-    Io(#[from] std::io::Error),
-    #[error(transparent)]
-    Json(#[from] serde_json::Error),
-    #[error("{0}")]
-    Normal(String),
-}
+pub type CoreResult<T = ()> = std::result::Result<T, CoreError>;
+
+#[derive(Debug)]
+pub struct CoreError(String);
 
 impl CoreError {
     pub(crate) fn new(m: impl Into<String>) -> CoreResult {
@@ -14,8 +9,24 @@ impl CoreError {
     }
 
     pub(crate) fn make(m: impl Into<String>) -> CoreError {
-        CoreError::Normal(m.into())
+        CoreError(m.into())
     }
 }
 
-pub type CoreResult<T = ()> = std::result::Result<T, CoreError>;
+impl From<std::io::Error> for CoreError {
+    fn from(value: std::io::Error) -> Self {
+        CoreError(value.to_string())
+    }
+}
+
+impl From<serde_json::Error> for CoreError {
+    fn from(value: serde_json::Error) -> Self {
+        CoreError(value.to_string())
+    }
+}
+
+impl AsRef<str> for CoreError {
+    fn as_ref(&self) -> &str {
+        &self.0
+    }
+}
