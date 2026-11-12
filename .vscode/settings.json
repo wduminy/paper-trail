@@ -11,5 +11,8 @@
     "chat.agent.codeBlockProgress": false,
     "chat.agent.thinking.generateTitles": false,
     "chat.agent.thinking.terminalTools": false,
-    "chat.checkpoints.showFileChanges": true
+    "chat.checkpoints.showFileChanges": true,
+    "cSpell.words": [
+        "gpui"
+    ]
 }
