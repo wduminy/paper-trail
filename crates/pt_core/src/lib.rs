@@ -1,3 +1,4 @@
+mod data;
 mod pdf;
 mod project;
 mod result;

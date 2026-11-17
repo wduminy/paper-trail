@@ -8,7 +8,9 @@ authors.workspace = true
 pdf-extract.workspace = true
 serde.workspace = true
 serde_json.workspace = true
+redb.workspace = true
 
 [dev-dependencies]
+tempfile.workspace = true
 rstest.workspace = true
 googletest.workspace = true

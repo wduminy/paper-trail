@@ -1,5 +1,6 @@
 pub type CoreResult<T = ()> = std::result::Result<T, CoreError>;
 
+/** The opaque error type used and emitted by this crate */
 #[derive(Debug)]
 pub struct CoreError(String);
 

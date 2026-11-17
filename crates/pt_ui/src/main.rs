@@ -1,6 +1,7 @@
 use gpui_kit::component::button::{Button, ButtonVariants};
 use gpui_kit::*;
 
+// TODO: 100 Create a workspace
 struct HelloWorld;
 
 impl Render for HelloWorld {

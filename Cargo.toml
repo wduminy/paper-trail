@@ -2,9 +2,9 @@
 resolver = "2"
 members = [
     "crates/pt_core",
-    "crates/pt_cli", "crates/pt_ui",
+    "crates/pt_cli", "crates/pt_ui", "crates/pt_play",
 ]
-default-members = [ "crates/pt_ui" ]
+default-members = [ "crates/pt_ui","crates/pt_core"]
 
 
 [workspace.package]
@@ -14,7 +14,8 @@ authors = ["Willem Duminy"]
 
 [workspace.dependencies]
 pt_core = { path = "crates/pt_core" }
-
+tempfile = "3.27.0"
+redb = {version = "4.6.0"}
 clap = {version = "^4.6.7",features = ["derive"]}
 pdf-extract = "^0.12.1"
 serde = {version="^1.0.229", features = ["derive"]}
