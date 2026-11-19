@@ -54,12 +54,11 @@ impl DataService {
 pub struct ReadTransaction(redb::ReadTransaction);
 
 impl ReadTransaction {
-    pub(crate) fn table(&self, table_name: &str) -> CoreResult<Option<BaseReadTable>> {
-        let def = TableDef::new(table_name);
+    pub(crate) fn open(&self, def: TableDef) -> CoreResult<BaseReadTable> {
         let r = self.0.open_table(def);
         let it = match r {
-            Ok(tab) => Some(BaseReadTable(tab)),
-            Err(redb::TableError::TableDoesNotExist(_)) => None,
+            Ok(tab) => BaseReadTable(Some(tab)),
+            Err(redb::TableError::TableDoesNotExist(_)) => BaseReadTable(None),
             Err(e) => return Err(e.into()),
         };
         Ok(it)
@@ -67,31 +66,30 @@ impl ReadTransaction {
 }
 
 //? is static lifetime good here?
-type TableDef<'u> = redb::TableDefinition<'u, String, String>;
+pub type TableDef = redb::TableDefinition<'static, String, String>;
 type Table<'t> = redb::Table<'t, String, String>;
-pub(crate) struct BaseReadTable(redb::ReadOnlyTable<String, String>);
+type ReadTable = redb::ReadOnlyTable<String, String>;
+pub(crate) struct BaseReadTable(Option<ReadTable>);
 
 impl BaseReadTable {
     pub(crate) fn read_o<O: serde::de::DeserializeOwned>(
         &self,
         key: impl Into<String>,
     ) -> CoreResult<Option<O>> {
-        let s = self.0.get(key.into())?;
-        let o = if let Some(s) = s {
-            let obj: O = serde_json::from_str(&s.value())?;
-            Some(obj)
-        } else {
-            None
+        if let Some(t) = &self.0 {
+            if let Some(s) = t.get_owned(key.into())? {
+                let obj: O = serde_json::from_str(&s.value())?;
+                return Ok(Some(obj));
+            }
         };
-        Ok(o)
+        Ok(None)
     }
 }
 
 pub struct WriteTransaction(redb::WriteTransaction);
 
 impl WriteTransaction {
-    pub(crate) fn table(&self, table_name: &str) -> CoreResult<BaseWriteTable<'_>> {
-        let def = TableDef::new(table_name);
+    pub(crate) fn open(&self, def: TableDef) -> CoreResult<BaseWriteTable<'_>> {
         let tab = self.0.open_table(def)?;
         Ok(BaseWriteTable(tab))
     }
@@ -150,5 +148,3 @@ impl From<redb::TableError> for CoreError {
         CoreError::make(err)
     }
 }
-
-const TABLE: TableDef = TableDef::new("my_data");

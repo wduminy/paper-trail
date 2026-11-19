@@ -1,6 +1,4 @@
 use googletest::prelude::*;
-use redb::TableDefinition;
-use rstest::*;
 
 use super::*;
 
@@ -10,13 +8,13 @@ fn data_crud() {
     {
         let tx = db.write().unwrap();
         {
-            let mut tab = tx.table(TABLE_NAME).unwrap();
+            let mut tab = tx.open(T_TEST).unwrap();
             assert_ok!(tab.insert("key-101", &serde_json::json!({"name": "Pete"})));
         }
         assert_ok!(tx.commit());
     }
     let rx = db.read().unwrap();
-    let tab = rx.table(TABLE_NAME).unwrap().unwrap();
+    let tab = rx.open(T_TEST).unwrap();
     let obj = tab.read_o::<serde_json::Value>("key-101").unwrap().unwrap();
     assert_that!(obj["name"], eq("Pete"))
 }
@@ -26,8 +24,9 @@ fn data_crud() {
 fn table_not_found() {
     let db = DataService::open_temp_h();
     let rx = db.read().unwrap();
-    let it = rx.table(TABLE_NAME).unwrap();
-    assert_true!(it.is_none())
+    let tab = rx.open(T_TEST).unwrap();
+    let obj = tab.read_o::<serde_json::Value>("key-101").unwrap();
+    assert_true!(obj.is_none());
 }
 
-const TABLE_NAME: &str = "test_tab";
+const T_TEST: TableDef = TableDef::new("test_tab");
